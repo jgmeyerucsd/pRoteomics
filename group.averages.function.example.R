@@ -60,4 +60,6 @@ names(testave)
 
 testave[["scaled.ave"]][1:100,]
 
+oa.scaled<-group.aves(table=t(oat),groups=allgroups)
+oa.scaled
 
