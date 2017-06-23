@@ -111,6 +111,35 @@ allmetab<-rbind(
   aa.scaled[[2]],
   ac.scaled[[2]]
 )
+heatmap.2(allmetab,scale="none",col = mycolors,trace="none",Colv = F,Rowv = F,dendrogram = "none",main=paste(nrow(scaled),"rows, scaled"),margins = c(10,10),tracecol = "black",key.title = "")
 
 
 write.table(sep="\t",x=allmetab,file="all.metabolites.zscaled.txt",quote = F, row.names = T,col.names = T)
+
+
+
+### now read in the raw signals for the acetyl/succinyl
+getwd()
+setwd("~/R24/metabolite_corr/")
+list.files()
+
+ack<-read.delim("acK_sitelvl_signals.txt",stringsAsFactors = F)
+
+head(ack)
+
+colnames(ack)
+rownames(ack)<-ack[,1]
+
+sitegrp<-c("con2w","fr2w","gl2w","hfd2w","hfd_fr2w","hfd_gl2w","con10w","fr10w","gl10w","hfd10w","hfd_fr10w","hfd_gl10w")
+sgn<-unlist(lapply(FUN=rep,sitegrp,times=5))
+colnames(ack)[2:60]<-sgn[1:59]
+acK<-ack[,2:60]
+
+ack.scaled<-group.aves(table=acK,groups=allgroups)
+
+ack.scaled[[2]]->ack.z
+3.63349245
+
+
+
+

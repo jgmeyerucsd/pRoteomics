@@ -1,0 +1,17 @@
+GO_MITOCHONDRIAL_FISSION
+> The division of a mitochondrion within a cell to form two or more separate mitochondrial compartments.
+COX10
+DNM1L
+FAM54A
+FAM54B
+FIS1
+GDAP1
+GGNBP1
+MFF
+MTFP1
+MTFR1
+MUL1
+OPA1
+PARK2
+SLC25A46
+SMCR7L

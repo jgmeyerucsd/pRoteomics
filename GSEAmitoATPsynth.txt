@@ -1,0 +1,19 @@
+GO_MITOCHONDRIAL_ATP_SYNTHESIS_COUPLED_PROTON_TRANSPORT
+> The transport of protons across a mitochondrial membrane to generate an electrochemical gradient (proton-motive force) that powers ATP synthesis.
+ATP5A1
+ATP5B
+ATP5C1
+ATP5D
+ATP5E
+ATP5F1
+ATP5G1
+ATP5G2
+ATP5G3
+ATP5H
+ATP5I
+ATP5J
+ATP5J2
+ATP5L
+ATP5O
+ATP5S
+STOML2

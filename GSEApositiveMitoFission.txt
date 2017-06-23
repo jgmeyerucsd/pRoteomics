@@ -1,0 +1,16 @@
+GO_POSITIVE_REGULATION_OF_MITOCHONDRIAL_FISSION
+> Any process that increases the rate, frequency or extent of mitochondrial fission. Mitochondrial fission is the division of a mitochondrion within a cell to form two or more separate mitochondrial compartments.
+BNIP3
+DCN
+DDHD1
+DDHD2
+DNM1L
+FIS1
+KDR
+MARCH5
+MFF
+MUL1
+PARK2
+PINK1
+SMCR7
+SMCR7L

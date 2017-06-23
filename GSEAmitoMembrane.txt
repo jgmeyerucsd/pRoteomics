@@ -1,0 +1,13 @@
+MITOCHONDRIAL_MEMBRANE_ORGANIZATION_AND_BIOGENESIS
+> Genes annotated by the GO term GO:0007006. A process that is carried out at the cellular level which results in the formation, arrangement of constituent parts, or disassembly of the mitochondrial membrane, the lipid bilayer surrounding a mitochondrion.
+BAK1
+BCL2
+BCL2L1
+BNIP3
+COX18
+DNM1L
+MFN2
+OPA1
+TAZ
+TIMM50
+TP53
