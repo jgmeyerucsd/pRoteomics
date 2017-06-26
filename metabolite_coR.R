@@ -1,5 +1,6 @@
-metabolite.cor=function(metabolites=acar,sites=ac.sites){
-  head(acar)
+metabolite.cor=function(metabolites=allmetab,sites=ack.z){
+  require(qvalue)
+  head(metabolites)
   head(sites)
   metabolites[is.na(metabolites)]<-0
   n.compare<-nrow(metabolites)
@@ -8,11 +9,12 @@ metabolite.cor=function(metabolites=acar,sites=ac.sites){
   outnames<-rownames(metabolites)
   outnames
   #i=1
-  #j=3
+  #j=1
   rownames(sites)[j]
   
   outlist.pos<-list()
   outlist.neg<-list()
+  outlist<-list()
   corval<-list()
   for(i in 1:n.compare){
     print(outnames[i])
@@ -23,26 +25,34 @@ metabolite.cor=function(metabolites=acar,sites=ac.sites){
       ### 
       if(sum(as.numeric(sites[j,]))!=0 & sum(as.numeric(metabolites[i,]))!=0){
         outlist.pos[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),as.numeric(metabolites[i,]),method = "pearson")$p.value
-        #outlist.neg[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),-1*as.numeric(metabolites[i,]),method = "pearson")$p.value
+        outlist.neg[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),-1*as.numeric(metabolites[i,]),method = "pearson")$p.value
         
         #if(tmp<=0.05){
         #  outlist[[outnames[i]]][[rownames(sites)[j]]]<-tmp
         #}
       }
       
-      #outlist[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),as.numeric(metabolites[i,]),method = "spearman")$p.value
+      #outlist[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),as.numeric(metabolites[i,]),method = "pearson")$p.value
     }
     #why<-sapply(1:nrow(sites),function(j) cor.test(as.numeric(sites[j,]),as.numeric(metabolites[i,])))
     #warnings()
   }
   
+  par(mfcol=c(1,3))
   hist(unlist(outlist))
+  hist(unlist(outlist.pos))
+  hist(unlist(outlist.neg))
+  
+  
   qvalue(unlist(outlist))
-  hist(qvalue(unlist(outlist)),xlim=c(0,0.1))
+  
+  hist(qvalue(unlist(outlist)))
   tmp.q.pos<-qvalue(unlist(outlist.pos))$qvalue
   tmp.q.neg<-qvalue(unlist(outlist.neg))$qvalue
+  outlist.p<-unlist(outlist.pos)
+  outlist.p[outlist.p<=0.000001]
   
-  tmp.q.pos[tmp.q.pos<=0.01]
+  tmp.q.pos[tmp.q.pos<=0.02]
   tmp.q.neg[tmp.q.neg<=0.01]
   
   ac.sites["Q9R0H0_643",]

@@ -1,0 +1,7 @@
+CUSTOM_MITOCHONDRIAL ROS PRODUCTION
+> genes involved in regulating mitochondrial ROS production
+HSPD1
+HSPE1
+HSP90B1
+HSPA5
+HSPA9
