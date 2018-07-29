@@ -1,11 +1,53 @@
+####metabolite correlation per row with sites
+
+sites<-read.delim(file="~/R24/finalsitelvl/merged_sites_1597changes.txt",header = T,stringsAsFactors = F,row.names = 1)
+sites[is.na(sites)]<-0
+head(sites)
+
+ac.sites<-sites[,1:10]
+suc.sites<-sites[,11:20]
+
+??pca
+plotPCA(ac.sites)
+head(sites)
+?prcomp
+ac.pca.s <- prcomp(ac.sites,
+                 center = TRUE,
+                 scale. = TRUE) 
+ac.pca <- prcomp(ac.sites,
+                   center = TRUE,
+                   scale. = FALSE) 
+plot(ac.pca)
+summary(ac.pca)
+summary(ac.pca.s)
+library(devtools)
+install_github("ggbiplot", "vqv")
+
+library(ggbiplot)
+g <- ggbiplot(ir.pca, obs.scale = 1, var.scale = 1, 
+              groups = ir.species, ellipse = TRUE, 
+              circle = TRUE)
+g <- g + scale_color_discrete(name = '')
+g <- g + theme(legend.direction = 'horizontal', 
+               legend.position = 'top')
+print(g)
 
 
 
+acar<-read.delim(file="~/R24/metabolites/filtered.ac.FC.txt",header = T,stringsAsFactors = F)
 
+acar[is.na(acar)]<-0
+head(acar)
+?cor
+covar.ac.acar<-diag(cov(t(acar),t(ac.sites)))
 
-metabolite.cor=function(metabolites=allmetab,sites=ack.z){
-  require(qvalue)
-  head(metabolites)
+test1<-cor.test(t(acar)[,1],t(ac.sites)[,1])
+test1$parameter
+?cor.test
+#### function to compute the correlation between each row in the matrix with each metabolite
+
+metabolite.cor=function(metabolites=acar,sites=ac.sites){
+  head(acar)
   head(sites)
   metabolites[is.na(metabolites)]<-0
   n.compare<-nrow(metabolites)
@@ -14,12 +56,11 @@ metabolite.cor=function(metabolites=allmetab,sites=ack.z){
   outnames<-rownames(metabolites)
   outnames
   #i=1
-  #j=1
+  #j=3
   rownames(sites)[j]
   
   outlist.pos<-list()
   outlist.neg<-list()
-  outlist<-list()
   corval<-list()
   for(i in 1:n.compare){
     print(outnames[i])
@@ -30,34 +71,26 @@ metabolite.cor=function(metabolites=allmetab,sites=ack.z){
       ### 
       if(sum(as.numeric(sites[j,]))!=0 & sum(as.numeric(metabolites[i,]))!=0){
         outlist.pos[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),as.numeric(metabolites[i,]),method = "pearson")$p.value
-        outlist.neg[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),-1*as.numeric(metabolites[i,]),method = "pearson")$p.value
+        #outlist.neg[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),-1*as.numeric(metabolites[i,]),method = "pearson")$p.value
         
         #if(tmp<=0.05){
         #  outlist[[outnames[i]]][[rownames(sites)[j]]]<-tmp
         #}
       }
-      
-      #outlist[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),as.numeric(metabolites[i,]),method = "pearson")$p.value
+
+      #outlist[[outnames[i]]][[rownames(sites)[j]]]<-cor.test(as.numeric(sites[j,]),as.numeric(metabolites[i,]),method = "spearman")$p.value
     }
     #why<-sapply(1:nrow(sites),function(j) cor.test(as.numeric(sites[j,]),as.numeric(metabolites[i,])))
     #warnings()
   }
   
-  par(mfcol=c(1,3))
   hist(unlist(outlist))
-  hist(unlist(outlist.pos))
-  hist(unlist(outlist.neg))
-  
-  
   qvalue(unlist(outlist))
-  
-  hist(qvalue(unlist(outlist)))
+  hist(qvalue(unlist(outlist)),xlim=c(0,0.1))
   tmp.q.pos<-qvalue(unlist(outlist.pos))$qvalue
   tmp.q.neg<-qvalue(unlist(outlist.neg))$qvalue
-  outlist.p<-unlist(outlist.pos)
-  outlist.p[outlist.p<=0.000001]
   
-  tmp.q.pos[tmp.q.pos<=0.02]
+  tmp.q.pos[tmp.q.pos<=0.01]
   tmp.q.neg[tmp.q.neg<=0.01]
   
   ac.sites["Q9R0H0_643",]
@@ -92,7 +125,12 @@ metabolite.cor=function(metabolites=allmetab,sites=ack.z){
   
   min(outlist[[1]])
   
-}
+  }
 
+
+sapply(1:nrow(df1), function(i) cor(df1[i,], df2[i,]))
+
+covar.ac.acar
+head(acar)
 
 

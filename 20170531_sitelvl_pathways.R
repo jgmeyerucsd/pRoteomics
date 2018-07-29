@@ -44,7 +44,7 @@ row.names(sl)<-gsub(sl[,1],pattern=".K\\+42.0105",replacement = "")
 
 row.names(kac.fc.order)
 row.names(sl)
-
+unique(substr(row.names(sl),start=1,stop=6))
 
 
 kac.significant<-kac.fdr.order<=0.01
@@ -73,7 +73,9 @@ head(kac.onlysig)
 head(kac.filtered)
 
 nrow(kac.onlysig)
+row
 nrow(kac.filtered)
+unique(substr(row.names(kac.filtered),start=1,stop=6))
 
 uniprot<-substr(row.names(kac.filtered),start=1,stop=6)
 
@@ -85,23 +87,24 @@ head(kac.filtered)
 
 ncol(slf)
 slf<-slf[,2:60]
+head(slf)
+head(slf[,31:32])
 
-
-
-slf.ave<-group.aves(slf[,2:60],groups=NA)
+slf.ave<-group.aves(slf[,31:59],groups=NA)
 
 
 slf.aves<-slf.ave[[2]]
 slf.aves
 
 
+
 uniprot<-substr(row.names(slf),start=1,stop=6)
 
-setwd("Z:/Jesse/R24/finalsitelvl/")
+setwd("Z:/R24/finalsitelvl/")
 getwd()
 pathway.files<-list.files()
 
-
+pathway.files
 
 
 #### additional pathways
@@ -122,12 +125,17 @@ geneid <- genes[match(uniprot, genemap[,"UNIPROTKB"])]
 geneids<-toupper(geneid)
 
 
+geneids[geneids=="EHHADH"]
+geneids[geneids=="CAT"]
 
 
 
 ##### combine the pathways into one ---
+list.files()
+bOx<-read.delim("customTCA.txt",skip = 1,head=T,stringsAsFactors = F)
+bOx<-read.delim("C:/users/jmeyer/documents/github/proteomics/customMitoRos.txt",skip = 1,head=T,stringsAsFactors = F)
+bOx<-read.delim("customATPsynth.txt",skip = 1,head=T,stringsAsFactors = F)
 
-bOx<-read.delim(pathway.files[4],skip = 1,head=T,stringsAsFactors = F)
 unlist(bOx)
 tmp.index<-is.na(match(geneids,unlist(bOx)))
 
@@ -137,22 +145,29 @@ library(RColorBrewer)
 tmpset
 colnames(tmpset)
 
+hsp90b1<-"P08113" ### HSP90b1
+geneids
+rownames(slf)
 
-
-box.aves<-group.aves(tmpset[,31:59], groups=NA)
+write.table(geneids,file="geneids.txt",sep="\t")
 
 
 tmpset<-slf[tmp.index==FALSE,]
 rownames(tmpset)<-paste(geneids[tmp.index==FALSE],substr(rownames(tmpset),start=8,stop=nchar(rownames(tmpset))))
+
+
+box.aves<-group.aves(tmpset[,31:59], groups=NA)
+nrow(box.aves[[2]])
+
 ?tiff
-tiff(filename = "Rplot.tif",
+tiff(filename = "customFAbetaOx.tif",
      width = 8, height = 11, units = "in", pointsize = 12,
      compression = c("none"),
      bg = "white", res = 600, family = "", restoreConsole = TRUE,
      type = c("windows"))
 
 my_palette <- colorRampPalette(c("blue","white", "red"))(n = 30)
-heatmap.2(as.matrix(tmpset),Rowv = F,Colv = F,
+heatmap.2(as.matrix(box.aves$scaled.ave),Rowv = F,Colv = F,
           na.color = "grey",
           dendrogram = "none",
           trace = "none",
