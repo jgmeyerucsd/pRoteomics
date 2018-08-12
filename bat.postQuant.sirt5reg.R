@@ -27,7 +27,7 @@ names(castFC)
 ### new orders for the columns
 #### order: RT sirt5 KO, CA sirt5 KO
 order<-c(5,3, 2,4)
-
+names(castFC)[order]
 
 ### order the succinyl sites as desired and name the rows
 FDR.order<-castFDR[,order]

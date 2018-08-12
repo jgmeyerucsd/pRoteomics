@@ -1,3 +1,7 @@
+source("https://bioconductor.org/biocLite.R")
+biocLite("Rsamtools")
+library(Rsamtools)
+
 
 sortBam("D:/RNAseq/Bam_Data/2.G4_2.bam","D:/RNAseq/Bam_Data/2.G4_2.sort",maxMemory=6000)
 sortBam("D:/RNAseq/Bam_Data/3.G4_3.bam","D:/RNAseq/Bam_Data/3.G4_3.sort",maxMemory=6000)
