@@ -1,3 +1,25 @@
+
+###### event poiinter
+
+source("http://www.bioconductor.org/biocLite.R")
+biocLite("EventPointer")
+
+source("https://bioconductor.org/biocLite.R")
+biocLite("SummarizedExperiment")
+biocLite("spliceR")
+
+if (!requireNamespace("BiocManager", quietly=TRUE))
+  install.packages("BiocManager")
+BiocManager::install("BiocGenerics", version = "devel")
+BiocManager::install("GenomicRanges", version = "devel")
+BiocManager::install("S4Vectors", version = "devel")
+
+a
+BiocManager::install("GenomicRanges", version = "devel",update=T,lib="C:/Users/jmeyer/Documents/")
+?BiocManager::install
+library(GenomicRanges)
+library(SGSeq)
+
 source("https://bioconductor.org/biocLite.R")
 
 #biocLite("Rsamtools")
@@ -60,16 +82,7 @@ features <- binGenome( TxDb )
 
 bamFiles<-files[seq(1,23, by=2)]
 
-#bamFiles <- c( "N2.1.bam", "N2.2.bam", "N2.3.bam","N2.4.bam","N2.5.bam",
-#               "G4.1.bam","G4.2.bam","G4.3.bam","G4.4.bam","G4.5.bam")
 
-targets <- data.frame( row.names = c("N2_rep1","N2_rep2","N2_rep3","N2_rep4",
-                                     "G4_rep1", "G4_rep2", "G4_rep3", "G4_rep4",
-                                     "R7_rep1","R7_rep2","R7_rep3","R7_rep4" ),
-                       bam = bamFiles,
-                       genotype = c("N2","N2", "N2","N2","G4","G4", "G4","G4", "R7","R7","R7","R7") ,
-                       stringsAsFactors = FALSE )
-?loadBAM
 bam <- loadBAM(targets, cores=1)
 ?readCounts
 
@@ -84,24 +97,6 @@ counts <- readCounts (
   maxISize = 50000,
   minAnchor = NULL )
 
-###### event poiinter
-
-source("http://www.bioconductor.org/biocLite.R")
-biocLite("EventPointer")
-
-source("https://bioconductor.org/biocLite.R")
-biocLite("SummarizedExperiment")
-biocLite("spliceR")
-
-if (!requireNamespace("BiocManager", quietly=TRUE))
-  install.packages("BiocManager")
-BiocManager::install("BiocGenerics", version = "devel")
-BiocManager::install("GenomicRanges", version = "devel")
-
-BiocManager::install("GenomicRanges", version = "devel",update=T,lib="C:/Users/jmeyer/Documents/")
-?BiocManager::install
-library(GenomicRanges)
-library(SGSeq)
 getwd()
 ?getBamInfo
 
