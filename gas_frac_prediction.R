@@ -114,6 +114,12 @@ cvs.prec.mz[[1]]
 cvs.frag.index<-which(fr[,"Fragment.Ion.Type"]!="precursor")
 
  
+#### add list for all precursor m/z values for contrast
+all.prec.z<-c()
+for(x in names(pi@subsets.col.index)){
+  all.prec.z<-c(all.prec.z, pi@subsets[[x]][["prec.mzs"]])
+}
+pi@subsets[["all"]][["prec.mzs"]]<-unique(all.prec.z)
 
 
 ### make list of precursor isotope areas
@@ -126,28 +132,30 @@ for(x in cvs){
 
 n=0
 dev.off()
-pdf(file=paste("plot",n,".pdf",sep="", collapse = ""),width=9, height=24)
-par(mfcol=c(9,1),cex=0.8)
-for(x in cvs){
-  #if(is.integer(n/3)){
-  #  dev.off()
-  #  tiff(filename=paste("plot",n,".tiff",sep="", collapse = ""),width=600, height=1440)
-  #  }
+pdf(file=paste("all precursors pt35 iso",n,".pdf",sep="", collapse = ""),width=9, height=36)
+par(mfcol=c(10,1),cex=0.8)
+for(x in names(pi@subsets.col.index)){
   print(x)
   print(min(cvs.prec.mz[[x]]))
   print(max(cvs.prec.mz[[x]]))
-  hist(cvs.prec.mz[[x]],
+  hist(pi@subsets[[x]][["prec.mzs"]],
        xlab="m/z",
-       breaks=seq(from=300,to=1250, by=0.7),
-       main=x)
+       breaks=seq(from=300,to=1250, by=0.35),
+       main=paste("CV=",x),
+       ylim=c(0,100))
   n=n+1
-  }
+}
+hist(pi@subsets[["all"]][["prec.mzs"]],
+     xlab="m/z",
+     breaks=seq(from=300,to=1250, by=0.35),
+     main="all precursors from all CVs",
+     ylim=c(0,100))
 dev.off()
 
 
 ### smallest possible windows, overlap by 1/2 their width
-q.bottom.slices<-seq(from=299.5, to= 1199.8, by =0.35)
-q.top.slices<-seq(from=300.2, to = 1200.5, by = 0.35)
+q.bottom.slices<-seq(from=399.5, to= 1199.8, by =0.35)
+q.top.slices<-seq(from=400.2, to = 1200.5, by = 0.35)
 
 windows<-list()
 for(i in 1:length(q.bottom.slices)){
@@ -168,7 +176,7 @@ for(x in cvs){
 
 ### find exact examples
 unique(cvs.prec.mz[[1]])[1:5]
-length(windows)/20
+length(windows)/60
 
 x=4 ### CV==60
 cvs[4]
