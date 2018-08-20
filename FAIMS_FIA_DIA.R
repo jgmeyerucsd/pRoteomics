@@ -120,30 +120,34 @@ peplvlfdr=function(msplitresults="msplit_out_pt8da.txt", fdrlevel=0.01){
 
 
 getwd()
-
+seqinr
+library(seqinr)
 require(Biostrings)
 add.protein=function(msplitresults="msplitout_IT_1da_500ppmFrag_2daPrec.txt",
                      fasta= "D:/20180816_FIA_DIA/2018-08-14-td-UP000002311.fas"){
   fas<-readAAStringSet(filepath=fasta, format="fasta",
                        nrec=-1L, skip=0L, seek.first.rec=FALSE,
                        use.names=TRUE, with.qualities=FALSE)
-  
-  fas[[1]]
+
+  ### loop through peptides, add the protein name to a vector
+  proteins<-c()
   pattern<-"HLEGISDADIAK"
-  ?BString
-  ?vmatchPattern
-  test<-vmatchPattern(fas, pattern=pattern, algorithm="naive-exact")
-  test
-  fas
-  length(test)
+
+
   
+  
+  test<-names(unlist(vmatchPattern(subject=fas, pattern=pattern, fixed=TRUE)))
+
   pep.pos <- lapply(file, function(x) {
     string <- BString(paste(x, collapse = ""))
     matchPattern(pattern, string, "naive exact")
   })
   
-  
-  ??AAString
+  peppos <- lapply(fas, function(x) {
+    string <- BString(paste(x, collapse = ""))
+    matchPattern(pattern, string)
+  })
+
 }
   
 
