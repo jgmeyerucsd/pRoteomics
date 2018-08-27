@@ -7,7 +7,7 @@ library(mzR)
 ###     to implement whole spectra matching process in R
 ####    change to get all spectra as R object
 
-mgf.lib<-readLines(con="C:/Users/jmeyer/Documents/msfragger_decoys_fixed.mgf")
+mgf.lib<-readLines(con="D:/FAIMS/msfragger_decoys_fixed.mgf")
 
 get.mgf.spec=function(mgf=mgf.lib, 
                       specID="TITLE=MSfragger1.45180.45180")
@@ -64,106 +64,50 @@ ms1da<-openMSfile(filename="D:/20180816_FIA_DIA/201808aug15_JGM_FDIA2_IT_pt8_ol.
 ms1da<-openMSfile(filename="D:/20180816_FIA_DIA/201808aug14_JGM_FDIA2_OT_1da.mzXML")
 
 
-rawspec<-spectra(ms1da, scans=6240)
-secondpep<-get.mgf.spec(mgf=mgf.lib,specID="MSfragger1.14757.14757")
-
+rawspec<-spectra(ms1da, scans=28405)
+secondpep<-get.mgf.spec(mgf=mgf.lib,specID="MSfragger1.32000.32000")
 ### IT, 0.3 Da
 f.secondpep<-filter.dia(spec=rawspec, lspec=secondpep, tol=0.3, tol.type="da")
-
 ### OT, 10ppm
 f.secondpep<-filter.dia(spec=rawspec, lspec=secondpep, tol=10, tol.type="ppm")
 
-
-
-
-
 dev.off()
-
 par(mfcol=c(3,1),cex.lab=1.2, cex.axis=1.2, mai=c(0.5,0.5,0.5,0))
-
 plot(rawspec[,1],rawspec[,2],type="h",lwd=1, xlim=c(200, 1200), xlab="mz", ylab="int", main="raw.dia")
 plot(secondpep[,1],secondpep[,2],type="h",lwd=1, xlim=c(200, 1200),xlab="mz", ylab="int", main="library spec")  
 plot(f.secondpep[,1],f.secondpep[,2],type="h",lwd=1, xlim=c(200, 1200),xlab="mz", ylab="int", main="filtered raw")  
 
+# make mirrored library spectra and projected spectra
+dev.off()
+par(mfcol=c(2,1),cex.lab=1.2, cex.axis=1.2, mai=c(0.5,0.5,0.5,0.5))
+plot(rawspec[,1],rawspec[,2],type="h",lwd=1, xlim=c(200, 1200), xlab="mz", ylab="int", main="raw.dia")
+### normalize heights
+normheights1<-secondpep[,2]/max(secondpep[,2])
+normheights2<-f.secondpep[,2]/max(f.secondpep[,2])
+plot(secondpep[,1],-normheights1,type="h",col="red",lwd=1, xlim=c(200, 1200),ylim=c(-1,1),xlab="mz", ylab="int", main="projected(top) vs. library(bot)")  
+lines(f.secondpep[,1],normheights2,type="h",col="black",lwd=1, xlim=c(200, 1200),xlab="mz", ylab="int")  
+
+# Lower minimum temperature in invasive range
+tMin <- dat$Native_Temp_Min - dat$Invasive_Temp_Min
+tMin[tMin < 0] <- 0
+dat$TempMinIncrease <- tMin
+
+# Higher maximum temperature in invasive range
+tMax <- dat$Invasive_Temp_Max - dat$Native_Temp_Max
+tMax[tMax < 0] <- 0
+dat$TempMaxIncrease <- tMax
+
 
 lib.45180
 
-setwd("D:/20180816_FIA_DIA/results/")
-
-list.files()
-
-
-peplvlfdr=function(msplitresults="msplit_out_pt8da.txt", fdrlevel=0.01){
-  res.tab<-read.delim(msplitresults,stringsAsFactors = F, header=T)
-  sorted.results<-res.tab[order(-res.tab[,"cosine"]),]
-  #peptide.factors<-as.factor(sorted.results[,"Peptide"])
-  t.first <- sorted.results[match(unique(sorted.results$Peptide), sorted.results$Peptide),]
-  decoylines<-grep(t.first[,"Name"], pattern="DECOY")
-  fdr=0
-  i = 1
-  while(fdr<fdrlevel){
-    fdr<-length(decoylines[1:i])/decoylines[i]
-    cutoffscore <- t.first[decoylines[i],"cosine"]
-    i=i+1
-    print(fdr)
-  }
-  print(paste("fdr", round(length(decoylines[1:(i-2)])/decoylines[i-2], digits = 4)))
-  print("score cutoff")
-  print(t.first[decoylines[i-2],"cosine"])
-  print(paste("peptide hits=", decoylines[i-2]))
-  
-  ### make output
-  pep.output<-t.first[1:decoylines[i-2],]
-  pep.output
-  }
-  
-
-
-getwd()
-seqinr
-library(seqinr)
-require(Biostrings)
-add.protein=function(msplitresults="msplitout_IT_1da_500ppmFrag_2daPrec.txt",
-                     fasta= "D:/20180816_FIA_DIA/2018-08-14-td-UP000002311.fas"){
-  fas<-readAAStringSet(filepath=fasta, format="fasta",
-                       nrec=-1L, skip=0L, seek.first.rec=FALSE,
-                       use.names=TRUE, with.qualities=FALSE)
-
-  ### loop through peptides, add the protein name to a vector
-  proteins<-c()
-  pattern<-"HLEGISDADIAK"
-
-
-  
-  
-  test<-names(unlist(vmatchPattern(subject=fas, pattern=pattern, fixed=TRUE)))
-
-  pep.pos <- lapply(file, function(x) {
-    string <- BString(paste(x, collapse = ""))
-    matchPattern(pattern, string, "naive exact")
-  })
-  
-  peppos <- lapply(fas, function(x) {
-    string <- BString(paste(x, collapse = ""))
-    matchPattern(pattern, string)
-  })
-
-}
   
 
 
 
-list.files()
-peplvlfdr(msplitresults="msplitout_IT_1da_500ppmFrag.txt")
-peplvlfdr(msplitresults="msplitout_IT_pt8da_500ppmFrag.txt")
-pt4<-peplvlfdr(msplitresults="msplitout_IT_pt4da_500ppmFrag.txt")
-
-peplvlfdr(msplitresults="msplit_out_pt4da.txt")
 
 
-oneda<-peplvlfdr(msplitresults="msplitout_IT_1da_500ppmFrag_2daprec.txt")
-pt8set<-peplvlfdr(msplitresults="msplitout_IT_pt8da_500ppmFrag_2daprec.txt")
-pt4set<-peplvlfdr(msplitresults="msplitout_IT_pt4da_500ppmFrag_2daprec.txt")
+
+
 
 
 ### first, add the lines with peptide to the mgf spec lib
