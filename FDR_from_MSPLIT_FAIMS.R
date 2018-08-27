@@ -15,11 +15,13 @@ peplvlfdr=function(msplitresults="msplit_out_pt8da.txt", fdrlevel=0.01){
   #i = 1
   lastdecoy<-c()
   ### loop through the decoy lines
-  for(i in 1:n.decoylines){
-    fdr<-length(decoylines[1:i])/decoylines[i]
-    if(fdr>fdrlevel){
-      print(i)
-      lastdecoy<-c(i,lastdecoy)
+  if(n.decoylines==0){lastdecoy<-NULL
+  } else { 
+    for(i in 1:n.decoylines){
+      fdr<-i/decoylines[i]
+      if(fdr>fdrlevel){
+        lastdecoy<-c(lastdecoy,i)
+      }
     }
   }
   if(is.null(lastdecoy)==TRUE){
@@ -27,18 +29,14 @@ peplvlfdr=function(msplitresults="msplit_out_pt8da.txt", fdrlevel=0.01){
     print(n.decoylines/maxlines)
     print(paste("peptides =",maxlines-n.decoylines))
   }
-  if(is.null(lastdecoy)==FALSE){
-    while(fdr<fdrlevel){
-      fdr<-length(decoylines[1:i])/decoylines[i]
-     cutoffscore <- t.first[decoylines[i],"cosine"]
-      i=i+1
-     print(fdr)
-    }
   
-    print(paste("fdr", round(length(decoylines[1:(i-2)])/decoylines[i-2], digits = 4)))
+  if(is.null(lastdecoy)==FALSE){
+    i=min(lastdecoy)-1
+    fdr<-i/decoylines[i]
+    print(paste("fdr", round(length(decoylines[1:i])/decoylines[i], digits = 4)))
     print("score cutoff")
-    print(t.first[decoylines[i-2],"cosine"])
-    print(paste("peptide hits=", decoylines[i-2]))
+    print(t.first[decoylines[i],"cosine"])
+    print(paste("peptide hits=", decoylines[i]-i))
   }
   ### make output
   #pep.output<-t.first[1:decoylines[i-2],]
@@ -47,15 +45,6 @@ peplvlfdr=function(msplitresults="msplit_out_pt8da.txt", fdrlevel=0.01){
 }
 
 
-setwd("D:/FAIMS/20180822_DI2A/")
-############### PEPTIDE LEVEL FDRs
-mso3p10f<-peplvlfdr(msplitresults="mso3p10f_DIA2_OT_60k_3i1o_1.txt") ## < 1% FDR
-mso3p30f<-peplvlfdr(msplitresults="mso3p30f_DIA2_OT_60k_3i1o_1.txt") ## 2369
-mso3p60f<-peplvlfdr(msplitresults="mso3p60f_DIA2_OT_60k_3i1o_1.txt")
-
-mso60kp8i_p8p10f<-peplvlfdr(msplitresults="msop8p10f_DIA2_OT_60k.txt")
-mso60kp8i_p8p30f<-peplvlfdr(msplitresults="msop8p30f_DIA2_OT_60k.txt")
-mso60kp8i_p8p60f<-peplvlfdr(msplitresults="msop8p60f_DIA2_OT_60k.txt")
 
 
 
