@@ -81,7 +81,7 @@ colnames(fr)
 
 
 ### make list of the identified precursor m/z per fraction 
-#cvs.prec.mz<-list()
+cvs.prec.mz<-list()
 
 
   ### make list of the identified precursor m/z per fraction 
@@ -130,26 +130,22 @@ for(x in cvs){
 
 #cvs.prec.area
 
-n=0
 dev.off()
-pdf(file=paste("all precursors pt35 iso",n,".pdf",sep="", collapse = ""),width=9, height=36)
-par(mfcol=c(10,1),cex=0.8)
+pdf(file=paste("pt4isol.mai.2.pdf",sep="", collapse = ""),width=16, height=8)
+par(mfcol=c(5,2),cex=0.5,mai=c(0.2,0.2,0.1,0.2))
+
 for(x in names(pi@subsets.col.index)){
   print(x)
-  print(min(cvs.prec.mz[[x]]))
-  print(max(cvs.prec.mz[[x]]))
   hist(pi@subsets[[x]][["prec.mzs"]],
-       xlab="m/z",
-       breaks=seq(from=300,to=1250, by=0.35),
+       breaks=seq(from=300,to=1250, by=0.4),
        main=paste("CV=",x),
-       ylim=c(0,100))
+       ylim=c(0,50))
   n=n+1
 }
 hist(pi@subsets[["all"]][["prec.mzs"]],
-     xlab="m/z",
-     breaks=seq(from=300,to=1250, by=0.35),
+     breaks=seq(from=300,to=1250, by=0.4),
      main="all precursors from all CVs",
-     ylim=c(0,100))
+     ylim=c(0,50))
 dev.off()
 
 
