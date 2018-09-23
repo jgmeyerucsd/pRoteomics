@@ -47,7 +47,8 @@ onlysig[significant==FALSE]<-NA
 head(onlysig)
 #### replace the values not greater than 1 from the matrix
 onlysig[abs(onlysig)<1]<-NA
-head(onlysig)
+onlysig<-onlysig[rowSums(is.na(onlysig))<4,]
+
 
 onlysig.4clust<-onlysig
 onlysig.4clust[is.na(onlysig)]<-0
@@ -75,32 +76,24 @@ unique(s.p)[1]->x
 site.df<-cbind(s.p, succinyl.raw)
 
 ss<-c()
-sites.list<-c()
-n.succinyl<-c()
-x<-"P19536"
-x
+sites.list<-list()
+
+
+
 for(x in unique(s.p)){
   tmp.position<-which(s.p==x)
-  
   tmp.sites<-unique(unlist(strsplit(succinyl.raw[tmp.position],split=paste(x,"_",collapse="",sep=""))))
   tmp.sites<-tmp.sites[nchar(tmp.sites)>1]
   tmp.sites<-unlist(strsplit(tmp.sites,split="_"))
   tmp.sites<-unique(tmp.sites)
   ss<-c(ss,length(grep(tmp.sites,pattern="K100")))
-  
   sites.list[[x]]<-tmp.sites
-  
 }
+
 ### how many total succinyl sites
 sum(ss)
 ### how many total succinyl proteins
 length(sites.list)
-
-for(i in 1:length(succinyl.raw)){
-  tmp.site.string<-succinyl.raw[i]
-  tmp.prot<-substr(succinyl.raw[i],start=1,stop=6)
-  unlist(strsplit(tmp.site.string, split=tmp.prot))
-  
-  
-}
-
+??venn
+venn(list())
+tmp.prot

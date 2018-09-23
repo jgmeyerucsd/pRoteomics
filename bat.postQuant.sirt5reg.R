@@ -104,14 +104,18 @@ hm1<-heatmap.2(as.matrix(s.set),scale="none", trace="none", tracecol = "black",
                col=my_palette,cexCol=0.8,labRow = F,key.title = "",
                cexRow = 0.8)
 
-
+nrow(s.set)
 write.table(s.set[hm1$rowInd,],quote=F,sep="\t",file="succinylonly_heatmapOrder.txt")
+
+
+s.set[1,1:2]
 
 s.5bko.set<-s.set[,1:2]
 s.5bko.set.filtered<-s.5bko.set
 s.5bko.set.filtered[s.5bko.set.filtered<0]<-NA
 s.5bko.set.filtered<-s.5bko.set.filtered[rowSums(is.na(s.5bko.set.filtered))<2,]
 
+rownames(s.5bko.set.filtered)
 
 
 nrow(s.5bko.set.filtered)
