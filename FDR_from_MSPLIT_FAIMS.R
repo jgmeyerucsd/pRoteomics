@@ -29,8 +29,7 @@ peplvlfdr=function(msplitresults="msplit_out_pt8da.txt", fdrlevel=0.01){
     print(n.decoylines/maxlines)
     print(paste("peptides =",maxlines-n.decoylines))
   }
-  
-  if(is.null(lastdecoy)==FALSE){
+  if(is.null(lastdecoy)==FALSE & (min(lastdecoy)-1) !=0){
     i=min(lastdecoy)-1
     fdr<-i/decoylines[i]
     print(paste("fdr", round(length(decoylines[1:i])/decoylines[i], digits = 4)))
@@ -38,10 +37,12 @@ peplvlfdr=function(msplitresults="msplit_out_pt8da.txt", fdrlevel=0.01){
     print(t.first[decoylines[i],"cosine"])
     print(paste("peptide hits=", decoylines[i]-i))
   }
+  if(is.null(lastdecoy)==FALSE & (min(lastdecoy)-1) ==0){
+    print(paste("FDR over", fdrlevel))
+  }
   ### make output
   #pep.output<-t.first[1:decoylines[i],]
   #pep.output
-  
 }
 
 
