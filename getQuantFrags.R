@@ -26,3 +26,4 @@ getQuantFrags = function(sequence="A+42.01057AQGEPQVQFK"){
   }
   return(yfrags)
 }
+
